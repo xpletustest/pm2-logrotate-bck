@@ -1,3 +1,6 @@
+# 2.7.1
+
+- changed: using our custom pm2 repos as a dependency (needed to fix issues with multiple instances)
 
 # 2.7.0
 
