@@ -1,6 +1,6 @@
 # @jessety/pm2-logrotate
 
-NOTE: This is a fork of [pm2-logrotate](https://github.com/keymetrics/pm2-logrotate), which is (currently) unmaintained. It fixes a [critical issue](https://github.com/keymetrics/pm2-logrotate/issues/170) on Windows, which was affecting [pm2-installer](https://github.com/jessety/pm2-installer).
+NOTE: This is a fork of [pm2-logrotate](https://github.com/keymetrics/pm2-logrotate), which is (currently) unmaintained. It fixes a [critical issue](https://github.com/keymetrics/pm2-logrotate/issues/170) that prevented any log files from being deleted on Windows, which was affecting [pm2-installer](https://github.com/jessety/pm2-installer).
 
 ## Description
 
