@@ -1,6 +1,6 @@
 {
   "name": "@jessety/pm2-logrotate",
-  "version": "2.7.0",
+  "version": "2.7.1",
   "description": "PM2 module that rotates application logs",
   "homepage": "https://github.com/jessety/pm2-logrotate",
   "bugs": {
