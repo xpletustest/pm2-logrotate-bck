@@ -8,7 +8,7 @@ PM2 module to automatically rotate logs of processes managed by PM2.
 
 ## Install
 
-    pm2 install pm2-logrotate
+    pm2 install @jessety/pm2-logrotate
 
 **NOTE:** the command is `pm2 install` NOT `npm install`
 
