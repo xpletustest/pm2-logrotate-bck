@@ -6,6 +6,13 @@ var moment  	= require('moment-timezone');
 var scheduler	= require('node-schedule');
 var zlib      = require('zlib');
 
+function log(msg) {
+  console.log(new Date().toLocaleString() +' '+ msg);
+}
+function error(err) {
+  console.error(new Date().toLocaleString() +' '+ err);
+}
+
 var conf = pmx.initModule({
   widget : {
     type             : 'generic',
@@ -26,7 +33,7 @@ var conf = pmx.initModule({
 });
 
 var PM2_ROOT_PATH = '';
-var Probe = pmx.probe();
+//var Probe = pmx.probe();
 
 if (process.env.PM2_HOME)
   PM2_ROOT_PATH = process.env.PM2_HOME;
@@ -79,8 +86,8 @@ function delete_old(file) {
     for (i = rotated_files.length - 1; i >= RETAIN; i--) {
       (function(i) {
         fs.unlink(path.resolve(dirName, rotated_files[i]), function (err) {
-          if (err) return console.error(err);
-          console.log('"' + rotated_files[i] + '" has been deleted');
+          if (err) return error(err);
+          log('"' + rotated_files[i] + '" has been deleted');
         });
       })(i);
     }
@@ -138,7 +145,7 @@ function proceed(file) {
     writeStream.close();
     fs.truncate(file, function (err) {
       if (err) return pmx.notify(err);
-      console.log('"' + final_name + '" has been created');
+      log('"' + final_name + '" has been created');
 
       if (typeof(RETAIN) === 'number') 
         delete_old(file);
@@ -161,7 +168,7 @@ function proceed_file(file, force) {
   }
 
   fs.stat(file, function (err, data) {
-    if (err) return console.error(err);
+    if (err) return error(err);
 
     if (data.size > 0 && (data.size >= SIZE_LIMIT || force)) 
       proceed(file);
@@ -191,13 +198,13 @@ function proceed_app(app, force) {
 
 // Connect to local PM2
 pm2.connect(function(err) {
-  if (err) return console.error(err.stack || err);
+  if (err) return error(err.stack || err);
 
   // start background task
   setInterval(function() {
     // get list of process managed by pm2
     pm2.list(function(err, apps) {
-      if (err) return console.error(err.stack || err);
+      if (err) return error(err.stack || err);
 
       var appMap = {};
       // rotate log that are bigger than the limit
@@ -223,7 +230,7 @@ pm2.connect(function(err) {
   scheduler.scheduleJob(ROTATE_CRON, function () {
     // get list of process managed by pm2
     pm2.list(function(err, apps) {
-        if (err) return console.error(err.stack || err);
+        if (err) return error(err.stack || err);
 
         var appMap = {};
         // force rotate for each app
@@ -243,93 +250,93 @@ pm2.connect(function(err) {
 });
 
 /**  ACTION PMX **/
-pmx.action('list watched logs', function(reply) {
-  var returned = {};
-  WATCHED_FILES.forEach(function (file) {
-        returned[file] = (fs.statSync(file).size);
-  });
-  return reply(returned);
-});
-
-pmx.action('list all logs', function(reply) {
-  var returned = {};
-  var folder = PM2_ROOT_PATH + "/logs";
-  fs.readdir(folder, function (err, files) {
-      if (err) {
-        console.error(err.stack || err);
-        return reply(0)
-      }
-
-      files.forEach(function (file) {
-        returned[file] = (fs.statSync(folder + "/" + file).size);
-      });
-      return reply(returned);
-  });
-});
+// pmx.action('list watched logs', function(reply) {
+//   var returned = {};
+//   WATCHED_FILES.forEach(function (file) {
+//         returned[file] = (fs.statSync(file).size);
+//   });
+//   return reply(returned);
+// });
+//
+// pmx.action('list all logs', function(reply) {
+//   var returned = {};
+//   var folder = PM2_ROOT_PATH + "/logs";
+//   fs.readdir(folder, function (err, files) {
+//       if (err) {
+//         error(err.stack || err);
+//         return reply(0)
+//       }
+//
+//       files.forEach(function (file) {
+//         returned[file] = (fs.statSync(folder + "/" + file).size);
+//       });
+//       return reply(returned);
+//   });
+// });
 
 /** PROB PMX **/
-var metrics = {};
-metrics.totalsize = Probe.metric({
-    name  : 'Global logs size',
-    value : 'N/A'
-});
+// var metrics = {};
+// metrics.totalsize = Probe.metric({
+//     name  : 'Global logs size',
+//     value : 'N/A'
+// });
 
-metrics.totalcount = Probe.metric({
-    name  : 'Files count',
-    value : 'N/A'
-});
+// metrics.totalcount = Probe.metric({
+//     name  : 'Files count',
+//     value : 'N/A'
+// });
 
 // update folder size of logs every 10secs
-function updateFolderSizeProbe() {
-  var returned = 0;
-  var folder = PM2_ROOT_PATH + "/logs";
-  fs.readdir(folder, function (err, files) {
-    if (err) {
-         console.error(err.stack || err);
-         return metrics.totalsize.set("N/A");
-    }
+// function updateFolderSizeProbe() {
+//   var returned = 0;
+//   var folder = PM2_ROOT_PATH + "/logs";
+//   fs.readdir(folder, function (err, files) {
+//     if (err) {
+//          error(err.stack || err);
+//          return metrics.totalsize.set("N/A");
+//     }
+//
+//     files.forEach(function (file, idx, arr) {
+//        returned += fs.statSync(folder + "/" + file).size;
+//     });
+//
+//     metrics.totalsize.set(handleUnit(returned, 2));
+//   });
+// }
+// updateFolderSizeProbe();
+// setInterval(updateFolderSizeProbe, 30000);
 
-    files.forEach(function (file, idx, arr) {
-       returned += fs.statSync(folder + "/" + file).size;
-    });
+// // update file count every 10secs
+// function updateFileCountProbe() {
+//   fs.readdir(PM2_ROOT_PATH + "/logs", function (err, files) {
+//       if (err) {
+//         error(err.stack || err);
+//         return metrics.totalcount.set(0);
+//       }
+//
+//       return  metrics.totalcount.set(files.length);
+//   });
+// }
+// updateFileCountProbe();
+// setInterval(updateFileCountProbe, 30000);
 
-    metrics.totalsize.set(handleUnit(returned, 2));
-  });
-}
-updateFolderSizeProbe();
-setInterval(updateFolderSizeProbe, 30000);
-
-// update file count every 10secs
-function updateFileCountProbe() {
-  fs.readdir(PM2_ROOT_PATH + "/logs", function (err, files) {
-      if (err) {
-        console.error(err.stack || err);
-        return metrics.totalcount.set(0);
-      }
-
-      return  metrics.totalcount.set(files.length);
-  });
-}
-updateFileCountProbe();
-setInterval(updateFileCountProbe, 30000);
-
-function handleUnit(bytes, precision) {
-  var kilobyte = 1024;
-  var megabyte = kilobyte * 1024;
-  var gigabyte = megabyte * 1024;
-  var terabyte = gigabyte * 1024;
-
-  if ((bytes >= 0) && (bytes < kilobyte)) {
-    return bytes + ' B';
-  } else if ((bytes >= kilobyte) && (bytes < megabyte)) {
-    return (bytes / kilobyte).toFixed(precision) + ' KB';
-  } else if ((bytes >= megabyte) && (bytes < gigabyte)) {
-    return (bytes / megabyte).toFixed(precision) + ' MB';
-  } else if ((bytes >= gigabyte) && (bytes < terabyte)) {
-    return (bytes / gigabyte).toFixed(precision) + ' GB';
-  } else if (bytes >= terabyte) {
-    return (bytes / terabyte).toFixed(precision) + ' TB';
-  } else {
-    return bytes + ' B';
-  }
-}
+// function handleUnit(bytes, precision) {
+//   var kilobyte = 1024;
+//   var megabyte = kilobyte * 1024;
+//   var gigabyte = megabyte * 1024;
+//   var terabyte = gigabyte * 1024;
+//
+//   if ((bytes >= 0) && (bytes < kilobyte)) {
+//     return bytes + ' B';
+//   } else if ((bytes >= kilobyte) && (bytes < megabyte)) {
+//     return (bytes / kilobyte).toFixed(precision) + ' KB';
+//   } else if ((bytes >= megabyte) && (bytes < gigabyte)) {
+//     return (bytes / megabyte).toFixed(precision) + ' MB';
+//   } else if ((bytes >= gigabyte) && (bytes < terabyte)) {
+//     return (bytes / gigabyte).toFixed(precision) + ' GB';
+//   } else if (bytes >= terabyte) {
+//     return (bytes / terabyte).toFixed(precision) + ' TB';
+//   } else {
+//     return bytes + ' B';
+//   }
+// }
