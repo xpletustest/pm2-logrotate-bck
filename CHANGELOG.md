@@ -1,3 +1,20 @@
+# 2.8.0
+- added: lots of logging
+- added: jsdoc comments with type hings
+- fixed: incorrect URLS in package.json
+- changed: default workerInterval to 10 seconds 
+- factored: out getPM2RootPath, getFinalTime, getFileBaseName, getFinalName
+- fixed: final name was incorrect when extension was not .log
+- fixed: delete_old was not working on Windows
+- fixed: replaced all var usage with const or let
+- fixed: code formatting
+- fixed: duplicate code in pm2.connect callback, factored out to proceed_apps function
+- fixed: logs of PM2 were not rotated on new day
+- fixed: multiple instances of app with different log paths were not correctly handled 
+  (see has_same_logs)
+- added: more explaining comments
+- removed: unused code
+
 # 2.7.6
 - added: include timestamp to log messages
 - changed: disabled all PMX / metrics related code   
