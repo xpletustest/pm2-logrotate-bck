@@ -23,7 +23,7 @@
     "compress": false,
     "dateFormat": "YYYY-MM-DD_HH-mm-ss",
     "max_size": "10M",
-    "retain": "30",
+    "retain": "10",
     "rotateInterval": "0 0 * * *",
     "rotateModule": true,
     "workerInterval": "10"

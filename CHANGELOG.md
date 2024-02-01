@@ -1,3 +1,7 @@
+# 2.8.1
+- changed: reduced default value for retain to 10
+- removed: GitHub workflow
+
 # 2.8.0
 - added: lots of logging
 - added: jsdoc comments with type hings
