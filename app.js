@@ -53,7 +53,7 @@ pm2.connect(
 
     // start background task (execute at WORKER_INTERVAL)
     setInterval(() => {
-      log("interval triggered");
+      //log("interval triggered");
       proceed_apps(false); // not forced rotation (only rotate if size > limit)
 
       // rotate pm2 logs
@@ -343,7 +343,7 @@ function proceed_apps(force) {
   pm2.list((err, apps) => {
     if (err) 
       return error(err.stack || err);    
-    log("apps: " + JSON.stringify(apps.map((app) => app.name)));
+    //log("apps: " + JSON.stringify(apps.map((app) => app.name)));
 
     const appMap = {};
     apps.forEach((app) => {
