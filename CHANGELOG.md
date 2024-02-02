@@ -1,3 +1,6 @@
+# 2.8.2
+- updated: pm2
+
 # 2.8.1
 - changed: reduced default value for retain to 10
 - removed: GitHub workflow
