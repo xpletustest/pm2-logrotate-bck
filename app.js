@@ -55,20 +55,12 @@ pm2.connect(
     setInterval(() => {
       //log("interval triggered");
       proceed_apps(false); // not forced rotation (only rotate if size > limit)
-
-      // rotate pm2 logs
-      proceed_file(path.join(PM2_ROOT_PATH, "pm2.log"), false);
-      proceed_file(path.join(PM2_ROOT_PATH, "agent.log"), false);
     }, WORKER_INTERVAL);
 
     // register the cron to force rotate file (default = every day at midnight)
     scheduler.scheduleJob(ROTATE_CRON, () => {
       log("cron triggered");
       proceed_apps(true); // forced rotation (at start of new day)
-
-      // rotate pm2 logs
-      proceed_file(path.join(PM2_ROOT_PATH, "pm2.log"), true);
-      proceed_file(path.join(PM2_ROOT_PATH, "agent.log"), true);
     });
   }
 );

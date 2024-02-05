@@ -1,6 +1,6 @@
 {
   "name": "pm2-logrotate",
-  "version": "2.8.2",
+  "version": "2.8.3",
   "description": "PM2 module that rotates application logs",
   "homepage": "https://github.com/mendrix/pm2-logrotate",
   "bugs": {

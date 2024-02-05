@@ -1,3 +1,6 @@
+# 2.8.3
+- removed: rotation of PM2 logs (rotation is done by winsw)
+
 # 2.8.2
 - updated: pm2
 
